@@ -1,4 +1,9 @@
 # HTTP Mock
+
+<p align="left">
+  <a href="https://github.com/hrishin/httpmock/actions"><img alt="GitHub Actions CI status" src="https://github.com/hrishin/httpmock/workflows/test/badge.svg"></a>
+</p>
+
 The `httpmock` is a simple mocking library to mock the [golang http client](https://golang.org/src/net/http/client.go) response.
 
 Its intent is to reduce the boiler plate code required to write the unit test where a unit of code to test is wrapping the [http.Client](https://golang.org/src/net/http/client.go) or passing [http.Client](https://golang.org/src/net/http/client.go) as a dependency.
