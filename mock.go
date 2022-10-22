@@ -9,6 +9,8 @@ import (
 
 // Response is to mock the HTTP response
 // to use with the MockClient
+type MultiResponse []*Response
+
 type Response struct {
 	URI        string
 	Body       string
@@ -30,6 +32,32 @@ func Client(response *Response) *http.Client {
 				StatusCode: response.StatusCode,
 				Body:       ioutil.NopCloser(strings.NewReader(response.Body)),
 				Header:     make(http.Header),
+			}
+		}
+
+		return &http.Response{
+			StatusCode: http.StatusNotFound,
+			Body:       ioutil.NopCloser(bytes.NewBufferString("Resource not found")),
+			Header:     make(http.Header),
+		}
+	}
+
+	return &http.Client{
+		Transport: RoundTripFunc(fn),
+	}
+}
+
+// MultiResponseClient create the mock http.client type
+// to mock HTTP response with a given MockResponse type
+func MultiResponseClient(response MultiResponse) *http.Client {
+	fn := func(req *http.Request) *http.Response {
+		for _, r := range response {
+			if strings.HasSuffix(req.URL.String(), r.URI) {
+				return &http.Response{
+					StatusCode: r.StatusCode,
+					Body:       ioutil.NopCloser(strings.NewReader(r.Body)),
+					Header:     make(http.Header),
+				}
 			}
 		}
 
